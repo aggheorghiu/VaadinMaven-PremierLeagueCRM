@@ -1,23 +1,17 @@
 package com.example.application.data.entity;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 @MappedSuperclass
-public abstract class AbstractEntity {
-
+public abstract class EntitateAbstracta {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "idgenerator")
-    // The initial value is to account for data.sql demo data ids
     @SequenceGenerator(name = "idgenerator", initialValue = 1000)
     private Long id;
 
     @Version
     private int version;
+
 
     public Long getId() {
         return id;
@@ -31,24 +25,28 @@ public abstract class AbstractEntity {
         return version;
     }
 
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntitateAbstracta)) {
+            return false;
+        }
+        EntitateAbstracta other = (EntitateAbstracta) obj;
+
+        if (getId() != null) {
+            return getId().equals(other.getId());
+        }
+        return super.equals(other);
+    }
+
     @Override
     public int hashCode() {
         if (getId() != null) {
             return getId().hashCode();
         }
         return super.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AbstractEntity)) {
-            return false; // null or other class
-        }
-        AbstractEntity other = (AbstractEntity) obj;
-
-        if (getId() != null) {
-            return getId().equals(other.getId());
-        }
-        return super.equals(other);
     }
 }
